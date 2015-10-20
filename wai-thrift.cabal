@@ -3,8 +3,10 @@
 
 name:                wai-thrift
 version:             0.0.1.0
--- synopsis:            
--- description:         
+synopsis:            Thrift transport layer for Wai
+description:         Implements a read-only transport layer for Wai
+                     Request, and write-only transport layer for Wai
+                     streaming body.
 license:             MIT
 license-file:        LICENSE
 author:              Yogesh Sajanikar
