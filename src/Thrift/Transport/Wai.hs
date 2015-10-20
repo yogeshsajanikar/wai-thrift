@@ -11,21 +11,27 @@ Portability : POSIX, WINDOWS
 Support thrift transport for Wai Request and Response.
 
 -}
-module Thrift.Transport.Wai where
+module Thrift.Transport.Wai (
+  RequestTransport,
+  StreamTransport,
+  fromRequest,
+  toStreamTransport,
+  thriftWaiApp,
+  thriftMiddleware
+  ) where
 
 import Thrift.Transport
 import Thrift.Protocol
-import Thrift.Protocol.JSON
 import Thrift.Transport.IOBuffer
 import Network.Wai as Wai
+import Network.Wai.Internal
 import Data.IORef
 import Blaze.ByteString.Builder
 import Data.Monoid
 import Network.HTTP.Types (status200)
+import Network.HTTP.Types.Method
 
-data RequestTransport = RequestTransport { request :: Request   -- ^ WAI request
-                                         , buffer :: ReadBuffer -- ^ Request body
-                                         }
+data RequestTransport = RequestTransport Request ReadBuffer
 
 -- | Creates RequestTransport from WAI request
 fromRequest :: Request -> IO RequestTransport
@@ -75,6 +81,9 @@ data StreamTransport = StreamTransport { writer :: Builder -> IO ()
                                        , flusher :: IO ()
                                        }
 
+toStreamTransport :: (Builder -> IO () ) -> IO () -> StreamTransport
+toStreamTransport w f = StreamTransport w f
+
 
 instance Transport StreamTransport where
 
@@ -101,9 +110,9 @@ thriftWaiApp ::
   -> Application 
 thriftWaiApp h isp osp proc_ req responder = do
   inp <- isp <$> fromRequest req
-  responder $ Wai.responseStream status200 [] $ \write flush -> do
-    let out = osp (StreamTransport write flush)
-    result <- proc_ h (inp, out)
+  responder $ Wai.responseStream status200 [] $ \write flushstream -> do
+    let out = osp (StreamTransport write flushstream)
+    _ <- proc_ h (inp, out)
     return ()
  
   
@@ -115,11 +124,19 @@ thriftMiddleware :: (Protocol ip, Protocol op)
                     -> (h -> (ip RequestTransport, op StreamTransport) -> IO Bool)
                     -> Application
                     -> Application
-thriftMiddleware h isp osp proc_ app req responder = do
-  app req responder
-  inp <- isp <$> fromRequest req
-  responder $ Wai.responseStream status200 [] $ \write flush -> do
-    let out = osp (StreamTransport write flush)
-    result <- proc_ h (inp, out)
-    return ()
+thriftMiddleware h isp osp proc_ app req responder = app req $ \res ->
+  case res of
+      ResponseStream {} -> 
+        if methodPost == requestMethod req then
+          do
+            inp <- isp <$> fromRequest req
+            responder $ Wai.responseStream status200 (responseHeaders res) $ \write flushstream -> do
+              let out = osp (StreamTransport write flushstream)
+              _ <- proc_ h (inp, out)
+              return ()
+        else
+          responder res
+
+      _ -> responder res
+    
 
