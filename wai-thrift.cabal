@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                wai-thrift
-version:             0.0.1.0
+version:             0.0.1.1
 synopsis:            Thrift transport layer for Wai
 description:         Implements a read-only transport layer for Wai
                      Request, and write-only transport layer for Wai
@@ -10,12 +10,19 @@ description:         Implements a read-only transport layer for Wai
 license:             MIT
 license-file:        LICENSE
 author:              Yogesh Sajanikar
-maintainer:          yogesh.sajanikar@yahoo.com
+maintainer:          yogesh_sajanikar@yahoo.com
+Homepage:            https://github.com/yogeshsajanikar/wai-thrift
+Stability:           Experimental                                          
 -- copyright:           
 category:            Web
 build-type:          Simple
 -- extra-source-files:  
 cabal-version:       >=1.10
+
+Source-repository head
+    type:            git
+    location:        git@github.com:yogeshsajanikar/wai-thrift.git
+                     
 
 library
   exposed-modules:     Thrift.Transport.Wai
