@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                wai-thrift
-version:             0.0.1.2
+version:             0.0.1.3
 synopsis:            Thrift transport layer for Wai
 description:         Implements a read-only transport layer for Wai
                      Request, and write-only transport layer for Wai
