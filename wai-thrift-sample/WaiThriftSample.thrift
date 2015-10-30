@@ -3,4 +3,5 @@
 service Greeting {
 
   string hello()
+
 }

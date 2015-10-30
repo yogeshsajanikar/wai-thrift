@@ -1,6 +1,0 @@
-flags: {}
-packages:
-- '.'
-extra-deps:
-- thrift-0.9.3
-resolver: lts-3.8
