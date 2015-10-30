@@ -13,5 +13,5 @@ import Network.Wai.Middleware.RequestLogger
 -- To test it use `curl -X POST -d "[1, \"hello\", 1, 0, {}]" http://localhost:3000`
 
 main :: IO ()
-main = run 3000 $ logStdoutDev $ simpleCors $ thriftApp GreetData BinaryProtocol BinaryProtocol G.process
+main = run 3000 $ logStdout $ simpleCors $ thriftApp GreetData BinaryProtocol BinaryProtocol G.process
 

@@ -36,6 +36,7 @@ library
 executable wai-thrift-warp
   hs-source-dirs:      warp
   main-is:             Main.hs
+  ghc-options: -threaded -O3 -rtsopts -with-rtsopts=-N
   other-modules:
 -- other-extensions:    
   build-depends:       base >=4.8 && <4.9
