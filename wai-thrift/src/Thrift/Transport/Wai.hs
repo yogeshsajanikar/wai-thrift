@@ -105,7 +105,7 @@ instance Transport StreamTransport where
 -- > thriftStream :: ActionM ()
 -- > thriftStream = do
 -- >     req <- request
--- >     stream $ thriftStreamingBody G.GreetData JSONProtocol JSONProtocol G.process
+-- >     stream $ thriftStreamingBody G.GreetData JSONProtocol JSONProtocol G.process req
 -- >
 thriftStreamingBody ::
   (Protocol ip, Protocol op)
