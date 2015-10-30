@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello Thrift</title>
+  </head>
+  <body>
+    <h1><div id="hello"/></h1>
+    <script src="thrift.js"></script>
+    <script src="Greeting.js"></script>
+    <script>
+      var base_url = window.location.origin;
+      var transport = new Thrift.TXHRTransport(base_url + "/hello");
+      var protocol  = new Thrift.TJSONProtocol(transport);
+      var client    = new GreetingClient(protocol);
+      client.hello(function(result) {
+          document.getElementById("hello").innerHTML = result;
+      });
+    </script>
+  </body>
+</html>
